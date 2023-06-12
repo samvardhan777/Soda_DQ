@@ -1,0 +1,14 @@
+fileignoreconfig:
+- filename: macros/assert_missing_percentage_totalemission.sql
+  checksum: 58165f09ff43f21d605fddca996cfd650bcc2c06f0924de3801af9fdd7b64878
+- filename: macros/generate_schema_name.sql
+  checksum: b14bddeadc49f1edffa3953a8dee9144fbb0bf57440a4a4978586768dbe6ac7f
+- filename: models/carbon_emissions/co2_emissions_and_temperatures_by_country.sql
+  checksum: 1031e52293a68f3f2710cb16db4c2df65c61892e29e3417cc719630fe2c7c822
+- filename: soda/distribution_ref_avgtemp.yml
+  checksum: 3d87fb9f990ca0a1a2dd7e5acc31eceade713b879b317f12f50d8c8d95955b65
+- filename: soda/distribution_reference.yml
+  checksum: 5b8baa0ca71a7959d6835aa81745283195fbc01b350bb4d26c6bcef913297521
+- filename: soda/configuration.yml
+  checksum: 273d9ec81b52e275ee9c7989015d0c634fc929bce42a9ed10afbe7def64e3fe7
+version: ""
