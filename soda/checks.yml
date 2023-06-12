@@ -1,0 +1,63 @@
+checks for CO2_EMISSIONS_AND_TEMPERATURES_BY_COUNTRY:
+  - row_count > 0:
+      name: Row count in CO2_EMISSIONS_AND_TEMPERATURES_BY_COUNTRY should be empty
+  - missing_count(YEAR) = 0:
+      name: YEAR should not be null
+  - missing_count(COUNTRY) = 0:
+      name: COUNTRY should not be null
+  - max(YEAR) between 2000 and 2100:
+      name: max(YEAR) should be between 2000 and 2100
+  - min(YEAR) between 1700 and 1800:
+      name: min(YEAR) should be between 1700 and 1800
+  - missing_percent(TOTALEMISSIONS) < 5%:
+      name: missing_percent(TOTALEMISSIONS) should be less than 5%
+  - missing_percent(PERCAPITAEMISSIONS) < 5%:
+      name: missing_percent(PERCAPITAEMISSIONS) should be less than 5%
+  - missing_percent(SHAREOFGLOBALEMISSIONS) < 5%:
+      name: missing_percent(SHAREOFGLOBALEMISSIONS) should be less than 5%
+  - missing_percent(AVERAGETEMPERATURE) < 5%:
+      name: missing_percent(AVERAGETEMPERATURE) should be less than 5%
+  - invalid_count(YEAR) = 0:
+      valid length: 4
+      name: YEAR should be valid
+  - schema:
+      fail:
+        when required column missing:
+          - YEAR
+          - COUNTRY
+          - TOTALEMISSIONS
+          - PERCAPITAEMISSIONS
+          - SHAREOFGLOBALEMISSIONS
+          - AVERAGETEMPERATURE
+        when wrong column type:
+          AVERAGETEMPERATURE: FLOAT
+          SHAREOFGLOBALEMISSIONS: FLOAT
+          PERCAPITAEMISSIONS: FLOAT
+          TOTALEMISSIONS: FLOAT
+          COUNTRY: STRING
+          YEAR: INTEGER
+  - distribution_difference(AVERAGETEMPERATURE) > 0.05:
+      method: psi
+      distribution reference file: distribution_reference.yml
+  - distribution_difference(averagetemperature, avgtem_dro) > 0.05:
+      method: psi
+      distribution reference file: distribution_ref_avgtemp.yml
+      name: AVERAGETEMPERATURE should be distributed like distribution_ref_avgtemp.yml
+  - avgtemp_without_emission:
+      avgtemp_without_emission query: |
+        SELECT count(averagetemperature)
+        FROM CO2_EMISSIONS_AND_TEMPERATURES_BY_COUNTRY where averagetemperature is not null 
+        and percapitaemissions is  null AND shareofglobalemissions is null and totalemissions is null and country is null and year is null
+      name: avgtemp_without_emission should be less than 50     
+      warn: when > 20
+      fail: when > 50
+  - failed rows:
+      name: Failed share of global emissions is not 100
+      fail query: |
+        select FLOOR(sum(SHAREOFGLOBALEMISSIONS)) as total,YEAR
+        from CO2_EMISSIONS_AND_TEMPERATURES_BY_COUNTRY 
+        where country not in ('Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania')
+        group by YEAR having total != 100
+automated monitoring:
+    datasets:
+        - include  CO2_EMISSIONS_AND_TEMPERATURES_BY_COUNTRY 

@@ -1,0 +1,15 @@
+data_source carbon_emissions:
+  type: snowflake
+  connection:
+    username: <USERNAME>
+    password: <PASSWORD>
+    account: <ACCOUNT>
+    database: <DATABASE>
+    warehouse: <WAREHOUSE>
+    connection_timeout: 
+    role: <ROLE>
+    client_session_keep_alive: false
+    session_parameters:
+      QUERY_TAG: soda-queries
+      QUOTED_IDENTIFIERS_IGNORE_CASE: false
+  schema: <SCHEMA>

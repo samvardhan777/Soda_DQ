@@ -1,0 +1,64 @@
+version: 2
+models:
+  - name: co2_emissions_by_country
+    description: CO2 Emission by different Country
+  - name: aggregate_global_emissions
+    description: Yearly global total emission 
+  - name: co2_emissions_and_temperatures_by_country
+    tests:
+      - dbt_expectations.expect_table_row_count_to_be_between:
+          min_value: 1 
+    columns:
+      - name: bkey 
+        meta:
+          primary-key: true
+      - name: Year
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null:
+              row_condition: "Year is not null" 
+          - dbt_expectations.expect_column_max_to_be_between:
+              min_value: 2000 
+              max_value: 2100
+          - dbt_expectations.expect_column_min_to_be_between:
+              min_value: 1700
+              max_value: 1800
+          - dbt_expectations.expect_column_value_lengths_to_equal:
+              value: 4
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: NUMBER
+      - name: Country
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_null:
+              row_condition: "Country is not null"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: VARCHAR
+          - dbt_expectations.expect_column_to_exist      
+      - name: TotalEmissions
+        tests:
+          - missing_percent:
+             percent: 5
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: FLOAT
+      - name: PerCapitaEmissions
+        tests:
+          - missing_percent:
+             percent: 5
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: FLOAT
+      - name: ShareOfGlobalEmissions
+        tests:
+          - missing_percent:
+             percent: 5
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: FLOAT
+      - name: AverageTemperature
+        tests:
+          - missing_percent:
+             percent: 5
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: FLOAT

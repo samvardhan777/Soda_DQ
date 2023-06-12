@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: carbon_emissions
+    tables:
+      - name: co2_emissions_by_country
+  - name: global_temperatures
+    tables:
+      - name: aggregate_country_temperatures
+
